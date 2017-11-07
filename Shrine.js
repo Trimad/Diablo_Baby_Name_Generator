@@ -42,7 +42,7 @@ function Shrine(x, y, spriteWidth, spriteHeight) {
   this.hover = function() {
 
     var d = dist(mouseX, mouseY, this.x, this.y);
-    if (d < (this.spriteHeight / 2)) {
+    if (d < (this.spriteHeight*3 / 2)) {
       return true;
     } else {
       return false;
