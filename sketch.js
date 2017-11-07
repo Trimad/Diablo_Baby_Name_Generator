@@ -41,9 +41,9 @@ function setup() {
 
 function loadFrames(spriteSheet, array, xStep, yStep, spriteWidth, spriteHeight, numFrames) {
   for (var f = 0; f < numFrames; f++) {
-    temp = createGraphics(71 * 2, 121 * 2);
+    temp = createGraphics(71, 121);
     temp.background(51);
-    temp.image(spriteSheet, xStep + (f + spriteWidth * f), yStep, spriteWidth, spriteHeight, 0, 0, spriteWidth * 2, spriteHeight * 2);
+    temp.image(spriteSheet, xStep + (f + spriteWidth * f), yStep, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
     append(array, temp);
   }
 }
