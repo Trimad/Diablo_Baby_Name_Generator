@@ -2,21 +2,26 @@ var eatSound;
 var startOverSound;
 var helloSound;
 var song;
-var shrine;
 var buildIt = "";
 var bg;
+
+//Sprite stuff
+var shrine; //declare object
+var shrineSprite;
+var idle = [];
+var used = [];
 
 function preload() {
   babynames = loadJSON("babynames.json");
   bg = loadImage("diablo_menu.jpg");
-  shrine = loadImage("shrine.png");
-
   myFont = loadFont('diablo.ttf');
   song = loadSound("intro.mp3");
+  //Sprite Stuff
+  shrineSprite = loadImage("shrine2.png");
 }
 
 function setup() {
-  song.playMode('restart');
+
   song.play();
   textFont(myFont);
   createCanvas(windowWidth, windowHeight);
@@ -27,13 +32,20 @@ function setup() {
 
   textAlign(CENTER, CENTER);
 
+  loadFrames(shrineSprite, idle, 1, 17, 71, 121, 10);
+  loadFrames(shrineSprite, used, 1, 155, 71, 121, 11);
+  loadFrames(shrineSprite, used, 1, 277, 71, 121, 10);
 
-  button = createButton('GENERATE');
-  button.position(width / 2 - 60, height * .4);
-  button.style("font-size", "16px");
-  button.style("font-family", 'Orator Std');
-  button.style("background-color", red);
-  button.mousePressed(newName);
+  shrine = new Shrine(width / 2, height / 2, 71, 121); //create object
+}
+
+function loadFrames(spriteSheet, array, xStep, yStep, spriteWidth, spriteHeight, numFrames) {
+  for (var f = 0; f < numFrames; f++) {
+    temp = createGraphics(71 * 2, 121 * 2);
+    temp.background(51);
+    temp.image(spriteSheet, xStep + (f + spriteWidth * f), yStep, spriteWidth, spriteHeight, 0, 0, spriteWidth * 2, spriteHeight * 2);
+    append(array, temp);
+  }
 }
 
 function newName() {
@@ -41,52 +53,52 @@ function newName() {
   var randomPrefix = floor(random(0, babynames.prefix.length));
   var randomSuffix = floor(random(0, babynames.suffix.length));
   var randomAppelation = floor(random(0, babynames.appelation.length));
-
+  imageMode(CORNER);
   background(bg);
   buildIt = "";
   buildIt += babynames.prefix[randomPrefix] + " ";
   buildIt += babynames.suffix[randomSuffix] + " ";
   buildIt += babynames.appelation[randomAppelation];
 
-
-
-
 }
 
 function windowResized() {
 
   resizeCanvas(windowWidth, windowHeight);
-  //background(bg);
-  button.position(width / 2 - 70, height * .4);
+  shrine.x = width / 2;
+  shrine.y = height / 2;
+
+}
+
+function mousePressed() {
+  if (shrine.hover()) {
+    newName();
+    shrine.used = true;
+    temp = frameCount;
+  }
 }
 
 function draw() {
 
-  var shrineWidth = 71;
-  var shrineHeight = 121;
+  imageMode(CORNER);
   background(bg);
-
   textSize(32);
-  text("NAME YOUR LEGACY", width / 2, height * 0.33);
-
+  var greeting = "NAME YOUR LEGACY";
+  textSize(width / greeting.length);
+  text(greeting, width / 2, height * 0.25);
   textSize(width / buildIt.length);
-  text(buildIt, width / 2, height * .5);
+  text(buildIt, width / 2, height * .75);
 
-  //image(shrine, width / 2, height / 2);
-  //image(img,dx,dy,dWidth,dHeight,sx,sy,[sWidth],[sHeight])
-  //image(shrine, width / 2 - (shrineWidth / 2), height / 2, shrineWidth, shrineHeight);
-  image(shrine, width / 2 - (shrineWidth / 2), height / 2, shrineHeight, shrineWidth, width/2, height/2, shrineWidth, shrineHeight);
+  if (!shrine.used) {
+    shrine.drawIdle();
+  } else {
+    shrine.drawUsed();
+    //Reset shrine after used frames are drawn
 
+  }
+  if (shrine.hover()) {
+    cursor(HAND);
+  } else {
+    cursor(ARROW);
+  }
 }
-/*
-  
-    if (frameCount % 60 >= 20 && frameCount % 60 < 40) {
-
-      image(playerSpriteSheet, this.position.x, this.position.y, playerSize, playerSize, sx + sw, sy + sh * 2, sw, sh);
-    }
-    if (frameCount % 60 >= 40 && frameCount % 60 <= 60) {
-
-      image(playerSpriteSheet, this.position.x, this.position.y, playerSize, playerSize, sx + sw * 2, sy + sh * 2, sw, sh);
-    }
-
-}*/
