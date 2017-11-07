@@ -82,20 +82,20 @@ function draw() {
 
   imageMode(CORNER);
   background(bg);
-  textSize(32);
+
+  if (!shrine.used) {
+    shrine.drawIdle();
+  } else {
+    shrine.drawUsed();
+  }
+
+
   var greeting = "NAME YOUR LEGACY";
   textSize(width / greeting.length);
   text(greeting, width / 2, height * 0.25);
   textSize(width / buildIt.length);
   text(buildIt, width / 2, height * .75);
 
-  if (!shrine.used) {
-    shrine.drawIdle();
-  } else {
-    shrine.drawUsed();
-    //Reset shrine after used frames are drawn
-
-  }
   if (shrine.hover()) {
     cursor(HAND);
   } else {
